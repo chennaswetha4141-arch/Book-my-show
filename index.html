@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Booking App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+        }
+        header {
+            background: #e51b23;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+        .movie {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        button {
+            background: #e51b23;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .seats {
+            display: grid;
+            grid-template-columns: repeat(6, 45px);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .seat {
+            background: #ddd;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .seat.selected {
+            background: green;
+            color: white;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            box-sizing: border-box;
+        }
+        #success {
+            display: none;
+            text-align: center;
+            color: green;
+            font-size: 20px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>🎬 Movie Booking</h1>
+</header>
+
+<div class="container">
+    <div class="movie">
+        <h2>Movie: Pushpa 2</h2>
+        <p>Language: Telugu</p>
+        <p>Price per seat: ₹150</p>
+    </div>
+
+    <label>Customer Name</label>
+    <input type="text" id="name" placeholder="Enter your name">
+
+    <label>Mobile Number</label>
+    <input type="tel" id="phone" placeholder="Enter mobile number">
+
+    <label>Select Show Time</label>
+    <select id="show">
+        <option value="10:00 AM">10:00 AM</option>
+        <option value="2:00 PM">2:00 PM</option>
+        <option value="6:00 PM">6:00 PM</option>
+        <option value="9:00 PM">9:00 PM</option>
+    </select>
+
+    <h3>Select Seats</h3>
+    <div class="seats" id="seats"></div>
+
+    <p>Selected Seats: <span id="selectedSeats">None</span></p>
+    <p>Total Amount: ₹<span id="total">0</span></p>
+
+    <button onclick="bookTicket()">Confirm Booking</button>
+
+    <div id="success">
+        🎉 Booking Successful!<br><br>
+        Your tickets have been booked successfully.
+    </div>
+</div>
+
+<script>
+    const seatContainer = document.getElementById("seats");
+    const selectedSeatsText = document.getElementById("selectedSeats");
+    const totalText = document.getElementById("total");
+
+    const price = 150;
+    let selectedSeats = [];
+
+    // Create 30 seats
+    for (let i = 1; i <= 30; i++) {
+        const seat = document.createElement("div");
+        seat.classList.add("seat");
+        seat.innerText = i;
+
+        seat.onclick = function () {
+            seat.classList.toggle("selected");
+
+            if (seat.classList.contains("selected")) {
+                selectedSeats.push(i);
+            } else {
+                selectedSeats = selectedSeats.filter(s => s !== i);
+            }
+
+            updateBooking();
+        };
+
+        seatContainer.appendChild(seat);
+    }
+
+    function updateBooking() {
+        if (selectedSeats.length === 0) {
+            selectedSeatsText.innerText = "None";
+        } else {
+            selectedSeatsText.innerText = selectedSeats.join(", ");
+        }
+
+        totalText.innerText = selectedSeats.length * price;
+    }
+
+    function bookTicket() {
+        const name = document.getElementById("name").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const show = document.getElementById("show").value;
+
+        if (name === "") {
+            alert("Please enter your name");
+            return;
+        }
+
+        if (phone === "") {
+            alert("Please enter your mobile number");
+            return;
+        }
+
+        if (selectedSeats.length === 0) {
+            alert("Please select at least one seat");
+            return;
+        }
+
+        document.getElementById("success").style.display = "block";
+
+        alert(
+            "Booking Successful!\n\n" +
+            "Name: " + name +
+            "\nShow: " + show +
+            "\nSeats: " + selectedSeats.join(", ") +
+            "\nTotal: ₹" + (selectedSeats.length * price)
+        );
+
+        // Try to close the window 3 seconds after successful booking.
+        setTimeout(function () {
+            window.close();
+        }, 3000);
+    }
+</script>
+</body>
+</html>
